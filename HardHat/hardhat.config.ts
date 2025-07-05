@@ -3,6 +3,10 @@ import "@nomicfoundation/hardhat-toolbox";
 /* import envEnc from "@chainLink/env-enc";
 console.log("env_enc", envEnc); */
 require("@chainLink/env-enc").config();
+//引入deploy-fundMe任务
+/* import "./tasks/deploy-fundMe";
+import "./tasks/interact-fundMe"; */
+import "./tasks/index"; //引入index.ts文件，自动加载所有任务
 
 const {
   SEPOLIA_URL,
