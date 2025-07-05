@@ -12,6 +12,7 @@ const config: HardhatUserConfig = {
     sepolia:{
       url:SEPOLIA_URL,
       accounts:[PRIVATE_KEY as `string`],
+      chainId:11155111,
     }
   }
 };
