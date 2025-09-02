@@ -7,6 +7,7 @@ require("@chainLink/env-enc").config();
 /* import "./tasks/deploy-fundMe";
 import "./tasks/interact-fundMe"; */
 import "./tasks/index"; //引入index.ts文件，自动加载所有任务
+import "hardhat-deploy";
 
 const {
   SEPOLIA_URL,
@@ -21,6 +22,14 @@ const config: HardhatUserConfig = {
       url:SEPOLIA_URL,
       accounts:[PRIVATE_KEY as `string`,PRIVATE_KEY_1 as `string`],
       chainId:11155111,
+    }
+  },
+  namedAccounts:{
+    firstAccount:{
+      default:0,
+    },
+    secondAccount:{
+      default:1,
     }
   }
 };

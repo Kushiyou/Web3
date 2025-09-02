@@ -655,7 +655,7 @@ contract FundMe{
 	//目标额度 constant 为常量关键字
 	uint256 constant TARGET = 1000 *10 ** 18;//筹集目标为1000USD
 	//合约所有权
-	address public onwner;
+	address public owner;
 	//时间锁
 	uint256 deploymentTimesTamp;
 	uint256 lockTime;
@@ -668,7 +668,7 @@ contract FundMe{
 		//sepolia测试网 ETH->USD 的地址
         dataFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
 		//获取部署合约地址的人的地址用作身份验证
-		onwner = msg.sender;
+		owner = msg.sender;
 		//获取当前合约部署时间戳
 		deploymentTimesTamp = block.timestamp;
 		lockTime = _lockTime;
@@ -706,21 +706,21 @@ contract FundMe{
 
 	//修改地址
 	function transferOwnerShip(address newAddress) public {
-		require(msg.sender == onwner, "Only Owners can do");
+		require(msg.sender == owner, "Only Owners can do");
 		require(block.timestamp < deploymentTimesTamp + lockTime,"Timeout");
-		onwner = newAddress;
+		owner = newAddress;
 	}
 
 	//从智能合约中提款
 	function getFund() external windowClose{
 		require(convertEthToUsd(address(this).balance) >= TARGET , "Target is not reached");
-		require(msg.sender == onwner, "Not owner of the contract");
+		require(msg.sender == owner, "Not owner of the contract");
 		//转账---transfer写法 如果失败会revert
-		//payable(onwner).transfer(address(this).balance);
+		//payable(owner).transfer(address(this).balance);
 		//转账---send写法 如果失败不会revert，会返回一个bool状态，可以根据这个状态判断交易是否成功
-		//bool success = payable(onwner).send(address(this).balance);
+		//bool success = payable(owner).send(address(this).balance);
 		//转账---call写法 transfer with data return value of function  格式：(bool , result) = address.call{value:value}("传递的数据")
-		(bool success, ) = payable(onwner).call{value:address(this).balance}("");
+		(bool success, ) = payable(owner).call{value:address(this).balance}("");
 		require(success,"transfer tx failed");
 		fundersToAcount[msg.sender] = 0;
 		isOver = true;
@@ -742,7 +742,7 @@ contract FundMe{
 		_;
 	}
 	modifier onlyOwner(){
-		require(msg.sender == onwner, "Not owner of the contract");
+		require(msg.sender == owner, "Not owner of the contract");
 		_;
 	}
 	//ERC20地址调用
