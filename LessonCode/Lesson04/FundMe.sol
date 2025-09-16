@@ -113,4 +113,11 @@ contract FundMe{
 	function setERC20Address(address _NewERC20Address) public onlyOwner{
 		_addressERC20 = _NewERC20Address;
 	}
+
+	receive() external payable {
+		fund();
+	}
+	fallback() external payable {
+		fund();
+	}
 }
