@@ -1,6 +1,8 @@
 require("@nomicfoundation/hardhat-toolbox");
 
 require("dotenv").config();
+
+require("./tasks/block-number")
 /** @type import('hardhat/config').HardhatUserConfig */
 
 //获取网络
