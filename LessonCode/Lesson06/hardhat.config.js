@@ -1,5 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
-
+require("hardhat-gas-reporter");
 require("dotenv").config();
 
 require("./tasks/block-number")
@@ -17,10 +17,21 @@ module.exports = {
       url: SEPOLIA_RPC_URL,
       accounts:[PRIVATE_KEY],
       chainId:11155111,
+    },
+    localhost:{
+      url: "http://127.0.0.1:8545/",
+      chainId:31337,
     }
   },
   solidity: "0.8.28",
   etherscan: {
     apiKey: ETHERSCAN_API_KEY // 单一 API 密钥
-  }
+  },
+  gasReporter: {
+    enabled: true,
+    currency: "USD",
+    outputFile: "gas-report.txt",
+    noColors: true,
+    // coinmarketcap: process.env.COINMARKETCAP_API_KEY,
+  },
 };
