@@ -664,9 +664,9 @@ contract FundMe{
 	//当前合约是否结束
 	bool public isOver = false;
 
-	constructor(uint256 _lockTime) {
-		//sepolia测试网 ETH->USD 的地址
-        dataFeed = AggregatorV3Interface(0x694AA1769357215DE4FAC081bf1f309aDC325306);
+	constructor(uint256 _lockTime,address ethToUsdAdd) {
+		//sepolia测试网 ETH->USD 的地址 0x694AA1769357215DE4FAC081bf1f309aDC325306
+        dataFeed = AggregatorV3Interface(ethToUsdAdd);
 		//获取部署合约地址的人的地址用作身份验证
 		owner = msg.sender;
 		//获取当前合约部署时间戳
