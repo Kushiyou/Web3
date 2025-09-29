@@ -1,4 +1,6 @@
-const {networkConfig,developmentChains} = require("../hleper-hardhat-config")
+const { network } = require("hardhat");
+const {networkConfig,developmentChains} = require("../helper-hardhat-config")
+const {verify} = require("../Utils/verify")
 /* 
     {getNamedAccounts, deployments} 是从hardhat环境变量her中结构出来的
 */
@@ -19,11 +21,19 @@ module.exports = async ({getNamedAccounts, deployments})=>{
     }else{
         ethUsdPriceFeedAddress = networkConfig[chainId]["ethUsdPriceFeed"];
     }
+
+    const args = [300000000000000,ethUsdPriceFeedAddress] //fundMe合约构造函数参数
+    //部署FundMe合约
     const fundMe = await deploy("FundMe",{
         from:deployer,
-        args:['300000000',ethUsdPriceFeedAddress],//
-        log:true
+        args:args,//
+        log:true,
+        waitComfirmations:network.config.blockComfirmations || 1,
     })
+    log(`FundMe deployed at ${fundMe.address}`);
+    if(!developmentChains.includes(network.name) && process.env.ETHSCAN_API_KEY){
+        await verify(fundMe.address,args);
+    }
 } 
 
 module.exports.tags = ["all","fundme"];
