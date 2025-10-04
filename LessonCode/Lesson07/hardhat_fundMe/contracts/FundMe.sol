@@ -12,8 +12,6 @@ contract FundMe {
     mapping(address => uint256) public fundersToAmount;
 
     uint256 constant MINIMUM_VALUE = 100 * 10 ** 18; //USD
-
-    address public testAddr;
     
     AggregatorV3Interface public dataFeed;
 
@@ -66,7 +64,7 @@ contract FundMe {
         owner = newOwner;
     }
 
-    function getFund() external windowClosed onlyOwner{
+    function getFund() external  onlyOwner{
         require(convertEthToUsd(address(this).balance) >= TARGET, "Target is not reached");
         // transfer: transfer ETH and revert if tx failed
         // payable(msg.sender).transfer(address(this).balance);

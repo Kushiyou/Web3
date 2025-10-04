@@ -1,6 +1,8 @@
 const {deployments,ethers,getNamedAccounts} = require("hardhat")
-const { expect } = require("chai");
+const { expect, assert } = require("chai");
+const {developmentChains} = require("../../helper-hardhat-config")
 
+!developmentChains.includes(network.name) ? describe.skip :
 describe("FundMe", async ()=>{
     let fundMe;
     let deployer;
@@ -21,19 +23,40 @@ describe("FundMe", async ()=>{
         
         //部署合约
         fundMe = await ethers.getContractAt("FundMe",fundMeDeployment.address);//获取已经部署的合约
-        //MockV3Aggregator = await ethers.getContractAt("MockV3Aggregator",mockV3AggregatorDeployment.address);
+        MockV3Aggregator = await ethers.getContractAt("MockV3Aggregator",mockV3AggregatorDeployment.address);
     })
 
     describe("constructor",function(){
         // it("get the dataFeed",async function (){
         //     console.log(await fundMe.dataFeed(),"99999");
         // })
-        it("test if the datafeed is assigned correctly", async function() {
-            //console.log(deployer,"deployer")
-            console.log(await fundMe.dataFeed(),"++++++++++++++++++++++++++++")
-            // await fundMe.waitForDeployment()
-            // assert.equal((await fundMe.dataFeed()), mockV3Aggregator.address)
+        // it("test if the datafeed is assigned correctly", async function() {
+        //     //console.log(deployer,"deployer")
+        //     console.log(await fundMe.dataFeed(),"++++++++++++++++++++++++++++")
+        //     // await fundMe.waitForDeployment()
+        //     // assert.equal((await fundMe.dataFeed()), mockV3Aggregator.address)
+        // })
+        it("sets the aggregator addresses correctly", async ()=>{
+            const response = await fundMe.dataFeed();
+            //expect(response).to.equal(MockV3Aggregator.address);
+            //console.log(response,await MockV3Aggregator.getAddress());
+            
+            assert.equal(response,await MockV3Aggregator.getAddress());
         })
+    })
+
+    //test fund function
+    describe("fund",async ()=>{
+        it("失败：没有发送足够的ETH", async()=>{
+            await expect(fundMe.fund()).to.be.revertedWith("Send more ETH");
+        })
+
+        it("成功：查看账户是否相等", async ()=>{
+            await fundMe.fund({value:ethers.parseEther("1")});
+            const response = await fundMe.fundersToAmount(deployer);
+            assert.equal(response.toString(),ethers.parseEther("1").toString())
+        })
+
     })
 })
 

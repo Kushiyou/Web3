@@ -4,9 +4,12 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test": "hardhat test",
-    "coverage": "hardhat coverage",
-    "deploy": "hardhat run scripts/deploy.js --network localhost"
+    "test": "yarn hardhat test",
+    "test:staging": "yarn hardhat test --network sepolia",
+    "coverage": "yarn hardhat coverage",
+    "deploy:localhost": "yarn hardhat deploy --network localhost",
+    "fund": "yarn hardhat run ./scripts/fund.js --network localhost",
+    "getFund": "yarn hardhat run ./scripts/getFund.js --network localhost"
   },
   "devDependencies": {
     "@chainlink/contracts": "^1.4.0",
